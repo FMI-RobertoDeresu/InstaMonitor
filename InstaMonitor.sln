@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2037
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InstaMonitor", "InstaMonitor\InstaMonitor.csproj", "{28C263DE-A654-4888-9B40-11EAF3D9F48F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{28C263DE-A654-4888-9B40-11EAF3D9F48F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28C263DE-A654-4888-9B40-11EAF3D9F48F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28C263DE-A654-4888-9B40-11EAF3D9F48F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28C263DE-A654-4888-9B40-11EAF3D9F48F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {937064D6-EEF6-4FD1-8AC1-46256B07A9B6}
+	EndGlobalSection
+EndGlobal

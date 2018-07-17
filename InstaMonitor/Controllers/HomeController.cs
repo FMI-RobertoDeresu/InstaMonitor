@@ -1,32 +1,71 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using InstaMonitor.Models;
+using InstaSharper.API;
+using InstaSharper.API.Builder;
+using InstaSharper.Classes;
+using InstaSharper.Logger;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 
 namespace InstaMonitor.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private static IInstaApi _instaApi;
+
+        public HomeController(IConfiguration config)
         {
-            return View();
+            if (_instaApi == null)
+            {
+                var userSession = new UserSessionData
+                {
+                    UserName = config["insta:username"],
+                    Password = config["insta:password"]
+                };
+
+                var delay = RequestDelay.FromSeconds(0, 0);
+
+                _instaApi = InstaApiBuilder.CreateBuilder()
+                    .SetUser(userSession)
+                    .UseLogger(new DebugLogger(LogLevel.Exceptions))
+                    .SetRequestDelay(delay)
+                    .Build();
+
+                _instaApi.LoginAsync().GetAwaiter().GetResult();
+            }
         }
 
-        public IActionResult About()
+        public async Task<IActionResult> Index(string username)
         {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
+            var model = !string.IsNullOrEmpty(username) ? await GetData(username) : new IndexModel();
+            return View(model);
         }
 
-        public IActionResult Contact()
+        private async Task<IndexModel> GetData(string username)
         {
-            ViewData["Message"] = "Your contact page.";
+            var model = new IndexModel();
+            model.Username = username;
 
-            return View();
+            var followers = await _instaApi.GetUserFollowersAsync(username, PaginationParameters.Empty);
+            var following = await _instaApi.GetUserFollowingAsync(username, PaginationParameters.Empty);
+
+            if (!followers.Succeeded || !following.Succeeded)
+            {
+                model.Message = "User not found.";
+                return model;
+            }
+
+            model.Followers = followers.Value.ToList();
+            model.Following = following.Value.ToList();
+
+            model.FollowersNotFollowed = model.Followers.Where(x => model.Following.All(y => y.UserName != x.UserName)).ToList();
+            model.FollowingNotFollowers = model.Following.Where(x => model.Followers.All(y => y.UserName != x.UserName)).ToList();
+
+            model.SearchedWithSuccess = true;
+
+            return model;
         }
 
         public IActionResult Error()

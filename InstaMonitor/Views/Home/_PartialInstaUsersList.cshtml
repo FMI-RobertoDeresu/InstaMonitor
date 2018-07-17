@@ -1,0 +1,10 @@
+﻿@model List<InstaSharper.Classes.Models.InstaUserShort>
+
+<ul>
+    @foreach (var user in Model)
+    {
+        <li>
+            <img src="@user.ProfilePicture"/> <span>@user.FullName (<a asp-action="Index" asp-route-username="@user.UserName">@user.UserName</a>)</span>
+        </li>
+    }
+</ul>
